@@ -1,0 +1,52 @@
+name: Webhook Smoke Test
+
+on:
+  repository_dispatch:
+    types: [ run-smoke ]
+
+# Payload 示例：
+# {
+#   "event_type": "run-smoke",
+#   "client_payload": {
+#     "branch": "main",
+#     "sha": "abc1234"
+#   }
+# }
+#
+# 触发命令（需要 repo 写权限的 PAT）：
+# curl -X POST \
+#   -H "Authorization: Bearer <PAT>" \
+#   -H "Content-Type: application/json" \
+#   https://api.github.com/repos/<owner>/<repo>/dispatches \
+#   -d '{"event_type":"run-smoke","client_payload":{"branch":"main","sha":"abc1234"}}'
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Validate payload
+        run: |
+          if [ -z "${{ github.event.client_payload.branch }}" ]; then
+            echo "ERROR: client_payload.branch is required"
+            exit 1
+          fi
+
+      - name: Checkout specified branch / commit
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.client_payload.sha || github.event.client_payload.branch }}
+
+      - name: Print target info
+        run: |
+          echo "Branch : ${{ github.event.client_payload.branch }}"
+          echo "SHA    : ${{ github.event.client_payload.sha || '(not specified, using branch HEAD)' }}"
+          echo "Actual : $(git rev-parse HEAD)"
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Run smoke tests
+        run: npm test
