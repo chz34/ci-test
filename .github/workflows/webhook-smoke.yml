@@ -32,15 +32,20 @@ jobs:
             exit 1
           fi
 
-      - name: Checkout specified branch / commit
+      - name: Checkout branch
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.client_payload.commit || github.event.client_payload.branch }}
+          ref: ${{ github.event.client_payload.branch }}
+          fetch-depth: ${{ github.event.client_payload.commit != '' && '0' || '1' }}
+
+      - name: Switch to specific commit
+        if: ${{ github.event.client_payload.commit != '' }}
+        run: git checkout ${{ github.event.client_payload.commit }}
 
       - name: Print target info
         run: |
           echo "Branch : ${{ github.event.client_payload.branch }}"
-          echo "SHA    : ${{ github.event.client_payload.commit || '(not specified, using branch HEAD)' }}"
+          echo "Commit : ${{ github.event.client_payload.commit || '(not specified, using branch HEAD)' }}"
           echo "Actual : $(git rev-parse HEAD)"
 
       - name: Setup Node.js
