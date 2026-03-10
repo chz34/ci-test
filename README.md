@@ -46,7 +46,7 @@ node test.js
 | 字段 | 必填 | 说明 |
 |---|---|---|
 | `branch` | 是 | 目标分支名 |
-| `sha` | 否 | 指定 commit SHA，不传则使用分支 HEAD |
+| `commit` | 否 | 指定 commit ID，不传则使用分支 HEAD |
 
 **触发示例**
 
@@ -55,7 +55,7 @@ curl -X POST \
   -H "Authorization: Bearer <PAT>" \
   -H "Content-Type: application/json" \
   https://api.github.com/repos/<owner>/ci-test/dispatches \
-  -d '{"event_type":"run-smoke","client_payload":{"branch":"main","sha":"abc1234"}}'
+  -d '{"event_type":"run-smoke","client_payload":{"branch":"main","commit":"abc1234"}}'
 ```
 
 > PAT 所需权限：Fine-grained token 需开启 **Contents: Read and write** 及 **Actions: Read and write**。

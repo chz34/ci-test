@@ -9,7 +9,7 @@ on:
 #   "event_type": "run-smoke",
 #   "client_payload": {
 #     "branch": "main",
-#     "sha": "abc1234"
+#     "commit": "abc1234"
 #   }
 # }
 #
@@ -18,7 +18,7 @@ on:
 #   -H "Authorization: Bearer <PAT>" \
 #   -H "Content-Type: application/json" \
 #   https://api.github.com/repos/<owner>/<repo>/dispatches \
-#   -d '{"event_type":"run-smoke","client_payload":{"branch":"main","sha":"abc1234"}}'
+#   -d '{"event_type":"run-smoke","client_payload":{"branch":"main","commit":"abc1234"}}'
 
 jobs:
   smoke:
@@ -35,12 +35,12 @@ jobs:
       - name: Checkout specified branch / commit
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.client_payload.sha || github.event.client_payload.branch }}
+          ref: ${{ github.event.client_payload.commit || github.event.client_payload.branch }}
 
       - name: Print target info
         run: |
           echo "Branch : ${{ github.event.client_payload.branch }}"
-          echo "SHA    : ${{ github.event.client_payload.sha || '(not specified, using branch HEAD)' }}"
+          echo "SHA    : ${{ github.event.client_payload.commit || '(not specified, using branch HEAD)' }}"
           echo "Actual : $(git rev-parse HEAD)"
 
       - name: Setup Node.js
