@@ -6,3 +6,8 @@ Simple math library with unit tests.
 ```js
 const { add, subtract, multiply, divide } = require('./src/math');
 ```
+
+## Running tests
+```sh
+node test.js
+```
