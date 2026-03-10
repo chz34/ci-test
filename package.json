@@ -1,0 +1,8 @@
+{
+  "name": "test-ci",
+  "version": "1.0.0",
+  "description": "Test repo for ci-agent bisect validation",
+  "scripts": {
+    "test": "node test.js"
+  }
+}
