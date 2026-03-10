@@ -40,3 +40,7 @@ console.log(`\nResults: ${passed} passed, ${failed} failed\n`);
 if (failed > 0) {
   process.exit(1);
 }
+
+// Extended edge-case tests added post-refactor
+test("add(100, 200) === 300", () => assert.strictEqual(add(100, 200), 300));
+test("subtract(100, 100) === 0", () => assert.strictEqual(subtract(100, 100), 0));
